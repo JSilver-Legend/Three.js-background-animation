@@ -11,18 +11,10 @@
 <body>
 	<div class="canvas" id="canvas"></div>
 	<div class="overlay">
-		<section>
 			<div class="title-first">
 				<div> Here is Step 1</div>
 				<div>content - 1</div>
 			</div>
-		</section>
-		<section>
-			<div class="title-second">
-				<div>Here is Step 2</div>
-				<div>content - 2</div>
-			</div>
-		</section>
 	</div>
 	<script type="module">
 
@@ -49,7 +41,6 @@
 		};
 
 		window.addEventListener('scroll',function(e) {
-			console.log(window.scrollY);
 			if( window.scrollY >= 500 && window.scrollY < 1050 ) {
 				gsap.to(mesh2.position, {
 				duration: 1,
@@ -116,24 +107,24 @@
 			const loader = new GLTFLoader();
 
 			loader.load( './assets/model/earth2.glb', function ( gltf ) {
-				let material = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.01 })
+				let material = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.8 })
 				mesh1 = new THREE.Points(gltf.scene.children[0].children[1].geometry, material)
-				console.log(mesh1)
-				scene.add(mesh1)
+				// scene.add(mesh1)
+				// console.log('mesh1->', mesh1)
 				mesh1.rotation.set(-Math.PI/2, 0, 0);
 				mesh1.position.set(350,0,0);
 				mesh1.scale.set(2,2,2);
-				console.log(mesh1.rotation);
 			} );
-
+			
 			loader.load( './assets/model/Marina_C.glb', function ( gltf ) {
-				console.log(gltf);
 				let material = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.01 })
 				mesh2 = new THREE.Points(gltf.scene.children[0].children[0].geometry, material)
 				mesh2.rotation.set(-Math.PI/2, 0, 0);
 				scene.add(mesh2)
+				console.log('mesh2->', mesh2)
 				mesh2.position.set(100,0,90)
 				mesh2.scale.set(7.5,7.5,7.5);
+				particleTransition();
 			} );
 
 			scene.add(new THREE.AmbientLight(0xffffff, 10));
@@ -160,11 +151,27 @@
 			animate();
 		}
 
+		function particleTransition() {
+			for( let i = 0 ; i < mesh2.geometry.attributes.position.count ; i++) {
+				// mesh2.geometry.attributes.position[i].x = 0;
+				// console.log(mesh2.geometry.attributes.position.array[i] = 0);
+				mesh2.geometry.attributes.position.array[i] = 0;
+				mesh2.geometry.attributes.position.array[i+1] = 0;
+				mesh2.geometry.attributes.position.array[i+2] = 0;
+			}
+			mesh2.geometry.attributes.position.needsUpdate = true;
+			console.log('mesh2', mesh2)
+		}
+
 		function animate() {
 			requestAnimationFrame(animate);
 			const delta = clock.getDelta();
 			controls.update();
 			composer.render();
+			particleTransition();
+			// console.log(mesh1.geometry.attributes.position.getX( 0 ))
+			// console.log(mesh1.geometry.attributes.position.getY( 0 ))
+			// console.log(mesh1.geometry.attributes.position.getZ( 0 ))
 		}
 
 	</script>
