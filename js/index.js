@@ -1,7 +1,3 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-
 let scene, camera, renderer
 let mesh = []
 let positionInfo = []
@@ -29,7 +25,8 @@ function init() {
     // Camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.6, 10000)
     camera.position.set(0, 60, 900)
-    var controls = new OrbitControls(camera, renderer.domElement)
+
+    var controls = new THREE.OrbitControls(camera, renderer.domElement)
     controls.target = new THREE.Vector3(0, 60, 0)
     controls.enableDamping = true;
     controls.enableRotate = true;
@@ -37,8 +34,8 @@ function init() {
     controls.update()
 
     // AxesHelper
-    // const axesHelper = new THREE.AxesHelper(80);
-    // scene.add(axesHelper);
+    const axesHelper = new THREE.AxesHelper(80);
+    scene.add(axesHelper);
 
     // Make Canvas Responsive
     window.addEventListener('resbze', () => {
@@ -48,7 +45,7 @@ function init() {
     })
 
     // Load GLB object
-    const loader = new GLTFLoader()
+    const loader = new THREE.GLTFLoader();
 
     loader.load('../assets/models/marina.glb', function (glb) {
         positionInfo[0] = combinBuffer(glb, 'position')
@@ -92,9 +89,9 @@ function combinBuffer(glb, bufferName) {
 function createObject(positionInfo) {
 
     // Object - main : (marina)
-    geometry[0] = new THREE.BufferGeometry()
-    geometry[0].setAttribute('position', positionInfo[0].clone())
-    geometry[0].setAttribute('initialPosition', positionInfo[0].clone())
+    geometry[0] = new THREE.BufferGeometry();
+    geometry[0].setAttribute('position', positionInfo[0].clone());
+    geometry[0].setAttribute('initialPosition', positionInfo[0].clone());
     geometry[0].attributes.position.setUsage(THREE.DynamicDrawUsage)
 
     mesh[0] = new THREE.Points(geometry[0], new THREE.PointsMaterial({ sbze: 0.01, color: 0xffffff }))
